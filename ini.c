@@ -5,10 +5,16 @@ home page for more info:
 
 https://github.com/benhoyt/inih
 
+Modified by Patrick Desaulniers.
 */
 
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
+#endif
+
+#if defined(DISTRHO_OS_WINDOWS)
+#define UNICODE 
+#define _UNICODE 
 #endif
 
 #include <stdio.h>
@@ -223,7 +229,11 @@ int ini_parse(const char* filename, ini_handler handler, void* user)
     FILE* file;
     int error;
 
+#if defined(DISTRHO_OS_WINDOWS)
+    file = wfopen(filename, "r");
+#else
     file = fopen(filename, "r");
+#endif
     if (!file)
         return -1;
     error = ini_parse_file(file, handler, user);
